@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   Pressable,
@@ -8,13 +8,58 @@ import {
   View,
 } from 'react-native';
 import AccountAvatar from '../../components/AccountAvatar';
+import { useRoute } from '@react-navigation/native';
+import { store } from '../../redux/configureStore';
+import apiClient from '../../api/apiClient';
 
 function EditAccount({navigation}) {
+
+  const token = store.getState().auth.session.jwt;
+
+  const route = useRoute();
+  const { id, given_name, name, nickname, email, picture } = route.params.user;
+
+  const [userParams, setUserParams] = useState({
+    nameParam: name,
+    pictureParam: picture,
+    nicknameParam: nickname,
+  });
+
+  const handleSaveChanges = async ()  => {
+
+    const { nameParam, nicknameParam } = userParams;
+    const data = {};
+
+    if (nameParam !== name) {
+      data.name = nameParam;
+    }
+
+    if (nicknameParam !== nickname) {
+      data.nickname = nicknameParam;
+    }
+
+    const updateUser = async () => {
+      try {
+        const response =  await apiClient.patch(`/user/${id}`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        navigation.navigate('Account');
+      } catch (error) {
+        console.error('API call error when trying to update user info: ', error);
+      }
+    }
+
+    await updateUser();
+  }
+
+
   return (
     <View style={styles.container}>
-      <AccountAvatar />
+      <AccountAvatar picture={picture}/>
 
-      <Text style={styles.username}>Antogace</Text>
+      <Text style={styles.username}>{given_name}</Text>
 
       <View style={{width: '100%'}}>
         <View>
@@ -34,7 +79,8 @@ function EditAccount({navigation}) {
               borderRadius: 5,
               width: '100%',
             }}
-            value="antogace"
+            value={userParams.nicknameParam}
+            onChangeText={(text) => {setUserParams({...userParams, nicknameParam: text})}}
           />
           <View style={{marginVertical: 10}}></View>
           <Text
@@ -53,7 +99,8 @@ function EditAccount({navigation}) {
               borderRadius: 5,
               width: '100%',
             }}
-            value="Antonella Gacetua"
+            value={userParams.nameParam}
+            onChangeText={(text) => {setUserParams({...userParams, nameParam: text})}}
           />
           <View style={{marginVertical: 10}}></View>
           <Text
@@ -74,10 +121,10 @@ function EditAccount({navigation}) {
               borderColor: '#8F8E94',
               borderWidth: 1,
             }}
-            value="antonellagacetua@gmail.com"
+            value={email}
           />
         </View>
-        <Pressable>
+        <Pressable onPress={handleSaveChanges}>
           <Text
             style={{
               color: '#fff',

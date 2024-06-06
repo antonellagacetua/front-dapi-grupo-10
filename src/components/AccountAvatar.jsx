@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const AccountAvatar = () => {
+const AccountAvatar = (props) => {
   return (
     <View
       style={{
@@ -10,7 +10,7 @@ const AccountAvatar = () => {
         alignItems: 'flex-end',
       }}>
       <Image
-        source={require('../../assets/accountAvatar.png')}
+        source={{uri: props.picture}}
         style={styles.avatar}
       />
       <Ionicons

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {fetchLogin} from '../redux/slices/authSlice';
+import {fetchLogin, updateUserId} from '../redux/slices/authSlice';
 import {useDispatch} from 'react-redux';
 
 const CLIENT_ID =
@@ -10,6 +10,9 @@ const CLIENT_ID =
 
 function LoginScreen({navigation}) {
   const dispatch = useDispatch();
+
+  
+
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -19,20 +22,17 @@ function LoginScreen({navigation}) {
   }, []);
 
   const signIn = async () => {
-    navigation.replace('Splash');
-    return;
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const token = userInfo.idToken;
-
       const response = await dispatch(fetchLogin(token)).unwrap();
 
-      console.log('Response: ', response);
-
       if (response?.success === true) {
+        await dispatch(updateUserId(userInfo.user.id));
         navigation.replace('Splash');
       }
+
     } catch (error) {
       console.error('Error attempting to sign in: ', error);
     }
