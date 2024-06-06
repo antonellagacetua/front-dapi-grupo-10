@@ -1,4 +1,4 @@
-package com.awesomeproject
+package com.movieplayfegrupo10
 
 import android.os.Bundle; 
 import org.devio.rn.splashscreen.SplashScreen;

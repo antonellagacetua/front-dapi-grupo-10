@@ -38,6 +38,9 @@ const authReducer = createSlice({
     updateJwt: (state, jwt) => {
       state.session.jwt = jwt.payload;
     },
+    updateUserId: (state, userId) => {
+      state.user.id = userId.payload;
+    },
     logout: state => {
       state.session.jwt = null;
       state.session.refreshToken = null;
@@ -55,6 +58,7 @@ const authReducer = createSlice({
 
     builder.addCase(fetchLogin.rejected, state => {
       console.log('Rejected');
+      console.error(state);
     });
 
     builder.addCase(fetchLogin.pending, state => {
@@ -63,6 +67,6 @@ const authReducer = createSlice({
   },
 });
 
-export const {updateRefreshToken, updateJwt, logout} = authReducer.actions;
+export const {updateRefreshToken, updateJwt, updateUserId, logout} = authReducer.actions;
 
 export default authReducer.reducer;

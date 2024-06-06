@@ -1,19 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AccountAvatar from '../components/AccountAvatar';
+import { store } from '../redux/configureStore';
+import apiClient from '../api/apiClient';
 
 function AccountScreen({navigation}) {
+
+  const [user, setUser] = useState({
+    id: null,
+    email: null,
+    name: null,
+    picture: null,
+    given_name: null,
+    family_name: null,
+    nickname: null,
+  });
+
+  const userId = store.getState().auth.user.id;
+  const token = store.getState().auth.session.jwt;
+
+  useEffect(() => {
+
+    const fetchUserData = async () => {
+
+      try {
+        const response =  await apiClient.get(`/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error('API call error when trying to get uer info: ', error);
+      }
+    }
+
+    fetchUserData();
+  });
+
+
   return (
     <View style={styles.container}>
-      <AccountAvatar />
+      <AccountAvatar picture={user.picture} />
 
-      <Text style={styles.username}>Antogace</Text>
+      <Text style={styles.username}>{user.given_name}</Text>
 
       <View style={styles.buttonsView}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditAccount')}>
+          onPress={() => navigation.navigate('EditAccount', { user })}>
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons
