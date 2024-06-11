@@ -3,7 +3,7 @@ import {store} from '../redux/configureStore';
 import {updateJwt} from '../redux/slices/authSlice';
 
 const apiClient = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: 'https://movieplay-back.onrender.com',
 });
 
 apiClient.interceptors.response.use(

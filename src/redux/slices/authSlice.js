@@ -1,19 +1,20 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 
-export const fetchLogin = createAsyncThunk(
-  'auth/fetchLogin',
+export const fetchLogin = createAsyncThunk('auth/fetchLogin',
   async (token, {rejectWithValue}) => {
     try {
-      const response = await axios.post(`${process.env.API_URL}/auth/google`, {
+      const response = await apiClient.post(`/auth/google`, {
         token,
       });
       return response.data;
     } catch (error) {
       console.error('Error attempting to sign in: ', error);
-      return rejectWithValue(
-        error.response?.data || 'Unexpected error occurred',
-      );
+      return rejectWithValue({
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      });
     }
   },
 );
@@ -58,7 +59,6 @@ const authReducer = createSlice({
 
     builder.addCase(fetchLogin.rejected, state => {
       console.log('Rejected');
-      console.error(state);
     });
 
     builder.addCase(fetchLogin.pending, state => {

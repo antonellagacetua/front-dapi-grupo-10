@@ -23,6 +23,7 @@ function AccountScreen({navigation}) {
   useEffect(() => {
 
     const fetchUserData = async () => {
+      console.log('Intentando obtener datos de usuario con id: ', userId)
 
       try {
         const response =  await apiClient.get(`/user/${userId}`, {
@@ -37,12 +38,12 @@ function AccountScreen({navigation}) {
     }
 
     fetchUserData();
-  });
+  }, [userId, token]);
 
 
   return (
     <View style={styles.container}>
-      <AccountAvatar picture={user.picture} />
+      <AccountAvatar picture={user.picture} enableEdit="false" />
 
       <Text style={styles.username}>{user.given_name}</Text>
 
