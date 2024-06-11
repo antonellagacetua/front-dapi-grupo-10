@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -14,28 +13,62 @@ import apiClient from '../../api/apiClient';
 
 function EditAccount({navigation}) {
 
+
   const token = store.getState().auth.session.jwt;
 
   const route = useRoute();
   const { id, given_name, name, nickname, email, picture } = route.params.user;
 
+  const [profilePicture, setProfilePicture] = useState(picture);
+
+
   const [userParams, setUserParams] = useState({
     nameParam: name,
-    pictureParam: picture,
+    pictureParam: null,
     nicknameParam: nickname,
+  });
+
+  const [errors, setErrors] = useState({
+    nickname: '',
+    name: '',
   });
 
   const handleSaveChanges = async ()  => {
 
-    const { nameParam, nicknameParam } = userParams;
-    const data = {};
+    const { nameParam, nicknameParam, pictureParam } = userParams;
+
+    const newErrors = {};
+
+    if (!nicknameParam || nicknameParam.length < 3) {
+      newErrors.nickname = 'El nombre de usuario debe tener al menos 3 caracteres';
+    }
+
+    if (!nameParam || nameParam.length < 3) {
+      newErrors.name = 'El nombre debe tener al menos 3 caracteres';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+
+    const data = new FormData();
 
     if (nameParam !== name) {
-      data.name = nameParam;
+      data.append('name', nameParam);
     }
 
     if (nicknameParam !== nickname) {
-      data.nickname = nicknameParam;
+      data.append('nickname', nicknameParam);
+    }
+
+    if (pictureParam) {
+      data.append('picture', {
+        uri: pictureParam,
+        type: 'image/jpeg',
+        name: 'profile_picture.jpg',
+      });
     }
 
     const updateUser = async () => {
@@ -43,21 +76,33 @@ function EditAccount({navigation}) {
         const response =  await apiClient.patch(`/user/${id}`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
           }
         });
         navigation.navigate('Account');
       } catch (error) {
-        console.error('API call error when trying to update user info: ', error);
+        console.log(error);
+        console.error('API call error when trying to update user info: ', error.message);
       }
     }
 
     await updateUser();
   }
 
+  const handleImageChange = (base64Image, uri) => {
+    setProfilePicture(base64Image);
+    setUserParams({...userParams, pictureParam: uri});
+  };
+
 
   return (
     <View style={styles.container}>
-      <AccountAvatar picture={picture}/>
+      
+      <AccountAvatar 
+        picture={profilePicture} 
+        enableEdit="true"
+        onImageChange={handleImageChange}
+      />
 
       <Text style={styles.username}>{given_name}</Text>
 
@@ -81,7 +126,9 @@ function EditAccount({navigation}) {
             }}
             value={userParams.nicknameParam}
             onChangeText={(text) => {setUserParams({...userParams, nicknameParam: text})}}
+            maxLength={30}
           />
+          <Text style={styles.error}>{errors.nickname}</Text>
           <View style={{marginVertical: 10}}></View>
           <Text
             style={{
@@ -101,7 +148,9 @@ function EditAccount({navigation}) {
             }}
             value={userParams.nameParam}
             onChangeText={(text) => {setUserParams({...userParams, nameParam: text})}}
+            maxLength={30}
           />
+          <Text style={styles.error}>{errors.name}</Text>
           <View style={{marginVertical: 10}}></View>
           <Text
             style={{
@@ -178,6 +227,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 10,
+  },
+  error: {
+    fontSize: 12,
+    color: 'red',
+    marginBottom: 5,
+    width: '100%',
   },
 });
 

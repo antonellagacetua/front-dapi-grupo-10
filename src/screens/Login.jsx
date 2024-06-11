@@ -5,14 +5,10 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {fetchLogin, updateUserId} from '../redux/slices/authSlice';
 import {useDispatch} from 'react-redux';
 
-const CLIENT_ID =
-  '1045137930748-mbe2osfvmmfdsjplditaa4issounob3a.apps.googleusercontent.com';
+const CLIENT_ID = '1045137930748-mbe2osfvmmfdsjplditaa4issounob3a.apps.googleusercontent.com';
 
 function LoginScreen({navigation}) {
   const dispatch = useDispatch();
-
-  
-
 
   useEffect(() => {
     GoogleSignin.configure({

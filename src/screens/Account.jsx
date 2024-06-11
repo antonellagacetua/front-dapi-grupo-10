@@ -42,7 +42,7 @@ function AccountScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <AccountAvatar picture={user.picture} />
+      <AccountAvatar picture={user.picture} enableEdit="false" />
 
       <Text style={styles.username}>{user.given_name}</Text>
 
