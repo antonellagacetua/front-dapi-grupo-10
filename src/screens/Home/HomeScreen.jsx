@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genreButton: {
+    fontWeight:'bold',
     backgroundColor: '#FF407D',
     paddingHorizontal: 5,
     textTransform: 'uppercase',

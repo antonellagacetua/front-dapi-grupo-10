@@ -19,7 +19,9 @@ function SearchResults({navigation, route}) {
     )
       .then(response => response.json())
       .then(data => {
-        setSearchResults(data.dataMovies.results.concat(data.dataCast.results));
+        setSearchResults(
+          new Set(data.dataMovies.results.concat(data.dataCast.results)),
+        );
         setTotalPages(data.dataMovies.total_pages);
       })
       .catch(err => {

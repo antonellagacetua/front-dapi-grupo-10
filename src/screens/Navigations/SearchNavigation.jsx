@@ -27,14 +27,6 @@ function SearchNavigation() {
       }}>
       <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen
-        name="SearchResults"
-        component={SearchResults}
-        options={{
-          headerTitle: 'Resultados de la busqueda',
-          headerTitleStyle: {fontSize: 24, fontWeight: 'bold'},
-        }}
-      />
-      <Stack.Screen
         name="Filters"
         component={Filters}
         options={{headerTitle: 'Ordernar por'}}

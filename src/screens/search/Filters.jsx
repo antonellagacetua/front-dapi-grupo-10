@@ -2,7 +2,9 @@ import React from 'react';
 import {Pressable, Text, View} from 'react-native';
 import SearchFilterBtn from '../../components/SearchFilterBtn';
 
-const Filters = () => {
+const Filters = ({route, navigation}) => {
+  const {handleFilter, selectedFilter} = route.params;
+
   return (
     <View
       style={{
@@ -11,22 +13,30 @@ const Filters = () => {
         alignItems: 'center',
         backgroundColor: '#C1DCF2',
       }}>
-      <SearchFilterBtn text={'Mas relevantes'} onPress={() => {}} />
+      <SearchFilterBtn
+        text={'Mas populares'}
+        onPress={handleFilter}
+        selectedFilter={selectedFilter}
+      />
       <SearchFilterBtn
         text={'Fecha de publicacion: Mas nuevo a mas viejo'}
-        onPress={() => {}}
+        onPress={handleFilter}
+        selectedFilter={selectedFilter}
       />
       <SearchFilterBtn
         text={'Fecha de publicacion: Mas viejo a mas nuevo'}
-        onPress={() => {}}
+        onPress={handleFilter}
+        selectedFilter={selectedFilter}
       />
       <SearchFilterBtn
         text={'Calificacion: De mayor a menor'}
-        onPress={() => {}}
+        onPress={handleFilter}
+        selectedFilter={selectedFilter}
       />
       <SearchFilterBtn
         text={'Calificacion: De menor a mayor'}
-        onPress={() => {}}
+        onPress={handleFilter}
+        selectedFilter={selectedFilter}
       />
     </View>
   );
