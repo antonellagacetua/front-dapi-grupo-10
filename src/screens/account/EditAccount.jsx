@@ -73,12 +73,15 @@ function EditAccount({navigation}) {
 
     const updateUser = async () => {
       try {
+        console.log('Intentando editar usuario ');
         const response =  await apiClient.patch(`/user/${id}`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           }
         });
+        console.log('Status :', response.status);
+        console.log('Data :', response.data);
         navigation.navigate('Account');
       } catch (error) {
         console.log(error);

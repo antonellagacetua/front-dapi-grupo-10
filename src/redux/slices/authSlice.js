@@ -59,7 +59,6 @@ const authReducer = createSlice({
 
     builder.addCase(fetchLogin.rejected, state => {
       console.log('Rejected');
-      console.error(state);
     });
 
     builder.addCase(fetchLogin.pending, state => {
