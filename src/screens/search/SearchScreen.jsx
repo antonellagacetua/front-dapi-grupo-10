@@ -184,7 +184,7 @@ function SearchScreen({navigation}) {
           handleFilterPress={handleFilterPress}
           showSearchBtn={search === ''}
         />
-        <Error message="No se obtubieron resultados" />
+        <Error message="No se obtuvieron resultados" />
       </View>
     );
   }
