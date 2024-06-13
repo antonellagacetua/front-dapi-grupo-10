@@ -25,6 +25,7 @@ const MovieCard = ({
       {title && (
         <Text
           style={{
+            color:'#16425B',
             maxWidth: 85,
             marginBottom: 10,
             textAlign: 'center',
