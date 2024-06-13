@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, Pressable, Text} from 'react-native';
+import { noPoster } from '../assets/noposter.js';
 
 const MovieCard = ({
   navigation,
@@ -15,9 +16,9 @@ const MovieCard = ({
       style={{flexDirection: 'column', alignItems: 'center'}}>
       <Image
         source={{
-          uri: `https://image.tmdb.org/t/p/w500${
-            item?.poster_path || item?.backdrop_path
-          }`,
+          uri: item?.poster_path 
+            ? `https://image.tmdb.org/t/p/w500${item.poster_path}` 
+            : `data:image/png;base64,${noPoster}`,
         }}
         style={{width, height, marginHorizontal: 5, ...styles}}
       />

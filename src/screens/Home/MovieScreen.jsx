@@ -12,7 +12,7 @@ import MovieInfo from '../../components/MovieInfo';
 const MovieScreen = ({navigation, route}) => {
   const {id} = route.params;
   const {data, loading, error} = useFetch(
-    `${process.env.API_URL}/pelicula/${id}`,
+    `https://movieplay-back.onrender.com/pelicula/${id}`,
   );
 
   if (error) {
