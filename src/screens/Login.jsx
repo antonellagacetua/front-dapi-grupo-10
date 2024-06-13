@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {fetchLogin, updateUserId} from '../redux/slices/authSlice';
 import {useDispatch} from 'react-redux';
+import Ionicon from 'react-native-vector-icons/AntDesign';
 
 const CLIENT_ID = '1045137930748-mbe2osfvmmfdsjplditaa4issounob3a.apps.googleusercontent.com';
 
@@ -47,7 +48,18 @@ function LoginScreen({navigation}) {
           series
         </Text>
         <Pressable onPress={() => signIn()}>
-          <Text style={styles.button}>Continuar con Google</Text>
+        <View
+            style={{
+              backgroundColor: '#16425B',
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 10,
+              borderWidth: 1,
+              borderColor: '#0B3750',
+            }}>
+            <Ionicon name="google" size={30} color="#FFF" />
+            <Text style={styles.button}>Continuar con Google</Text>
+          </View>
         </Pressable>
       </View>
     </LinearGradient>
@@ -94,12 +106,10 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: 20,
-    backgroundColor: '#6C9BC1',
-    color: '#0B3750',
-    borderWidth: 1,
-    borderColor: '#0B3750',
-    borderRadius: 14,
-    paddingHorizontal: 40,
+    backgroundColor: '#16425B',
+    color: '#FFF',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
 });
 
