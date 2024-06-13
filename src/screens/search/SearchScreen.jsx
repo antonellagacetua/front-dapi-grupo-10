@@ -28,7 +28,7 @@ function SearchScreen({navigation}) {
   const [totalPages, setTotalPages] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState('Mas populares');
   const [hasMore, setHasMore] = useState(true);
 
   const filters = {
@@ -44,16 +44,33 @@ function SearchScreen({navigation}) {
   };
 
   useEffect(() => {
+    setError(null);
     if (search === '') {
       setSearchResults([]);
       return;
     }
     setIsRefreshing(true);
-    fetch(
-      `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${currentPage}`,
-    )
+    fetch(`http://movieplay-back.onrender.com/pelicula/search/${search}?page=1`)
       .then(response => response.json())
       .then(data => {
+        if (!data.dataCast.results && data.dataMovies.results.length === 0) {
+          setError('No se encontraron resultados');
+          return;
+        }
+        if (
+          data.dataCast.results.length > 0 &&
+          data.dataMovies.results.length === 0
+        ) {
+          setSearchResults(data.dataCast.results);
+          setTotalPages(data.dataCast.total_pages);
+          return;
+        }
+        if (!data.dataCast.results && data.dataMovies.results.length > 0) {
+          setSearchResults(data.dataMovies.results);
+          setTotalPages(data.dataMovies.total_pages);
+          return;
+        }
+
         setSearchResults(data.dataCast.results.concat(data.dataMovies.results));
         setTotalPages(data.dataMovies.total_pages);
       })
@@ -63,7 +80,7 @@ function SearchScreen({navigation}) {
       .finally(() => {
         setIsRefreshing(false);
       });
-  }, [search, currentPage]);
+  }, [search]);
 
   const handleFilter = newFilter => {
     setSelectedFilter(newFilter);
@@ -87,12 +104,15 @@ function SearchScreen({navigation}) {
 
     try {
       const response = await fetch(
-        `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${
+        `http://movieplay-back.onrender.com/pelicula/search/${search}?page=${
           currentPage + 1
         }`,
       );
       const data = await response.json();
-      setSearchResults([...searchResults, ...data.dataMovies.results]);
+      setSearchResults(prevResults => [
+        ...prevResults,
+        ...data.dataMovies.results,
+      ]);
       setTotalPages(data.dataMovies.total_pages);
       setCurrentPage(currentPage + 1);
       setHasMore(data.dataMovies.page < data.dataMovies.total_pages);
@@ -156,7 +176,7 @@ function SearchScreen({navigation}) {
 
   if (error) {
     return (
-      <View>
+      <View style={{flex: 1, backgroundColor: '#C1DCF2'}}>
         <SearchBar
           handleChange={handleChange}
           handleSearchPress={handleSearchPress}
@@ -164,7 +184,7 @@ function SearchScreen({navigation}) {
           handleFilterPress={handleFilterPress}
           showSearchBtn={search === ''}
         />
-        <Error message="Ocurrio un error al cargar el trailer" />
+        <Error message="No se obtubieron resultados" />
       </View>
     );
   }
@@ -270,4 +290,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchScreen;
+export default SearchScreen;
