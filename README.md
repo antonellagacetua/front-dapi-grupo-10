@@ -1,79 +1,102 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MoviePlay App Mobile
 
-# Getting Started
+## Configuración del Entorno (Android) 🔧
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### Instalar Dependencias
 
-## Step 1: Start the Metro Server
+Es necesario Node, React-Native-Cli, Un JDK y Android Studio
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### Instalar Node
 
-To start Metro, run the following command from the _root_ of your React Native project:
+Se recomienda instalar Node via Chocolatey (instalador de paquetes para Windows)
 
-```bash
-# using npm
-npm start
+https://chocolatey.org/install
 
-# OR using Yarn
-yarn start
+Abrir un Prompt como administrador y correr el siguiente comando:
+
+choco install -y nodejs-lts microsoft-openjdk17
+
+### Ambiente de Desarrollo para Android
+
+Descargar e Instalar Android Studio:
+
+https://developer.android.com/studio/index.html
+
+Asegurarse que esten tildados los siguientes componentes:
+
+Android SDK
+Android SDK Platform
+Android Virtual Device
+Performance (Intel ® HAXM)
+
+### Instalar Android SDK
+
+Android Studio instala el último SDK de Android de forma predeterminada. Sin embargo, la creación de una aplicación React Native con código nativo requiere el Android 14 (UpsideDownCake) SDK en particular. Se pueden instalar SDK de Android adicionales a través del SDK Manager en Android Studio.
+
+Para hacerlo, abra Android Studio, haga clic en el botón "Configure" y seleccione "SDK Manager".
+
+Seleccione la pestaña "SDK Platforms" en SDK Manager, luego marque la casilla junto a "Show Package Details" en la esquina inferior derecha. Busque y expanda la opción Android 14 (UpsideDownCake), luego asegúrese de que los siguientes elementos estén marcados:
+
+- Android SDK Platform 34
+
+- Intel x86 Atom_64 System Image o Google APIs Intel x86 Atom System Image
+
+A continuación, seleccione la pestaña "SDK Tools" y marque la casilla junto a "Show Package Details" aquí también. Busque y expanda la entrada "Android SDK Build-Tools", luego asegúrese de que la version 34.0.0 esté seleccionada.
+
+Finalmente, haga clic en "Aplicar" para descargar e instalar el SDK de Android y las herramientas de compilación relacionadas.
+
+### Configurar variable de entorno ANDROID_HOME
+
+Las herramientas de React Native requieren que algunas variables de entorno sean configuradas en orden para desarrollar aplicaciones con codigo nativo.
+
+Abra el panel de control de Windows (Control Panel)
+Seleccione Cuentas de Usuario y nuevamente Cuentas de Usuario (User Account)
+Presione en modificar variables de entorno (Change My Enviroment Variables)
+Presione en Nueva y cree la variable de usuario ANDROID_HOME apuntando al path del Android SDK instalado:
+
+El SDK se instala, por defecto, en la siguiente ubicacion:
+
+%LOCALAPPDATA%\Android\Sdk
+
+Puede encontrar la ubicacion especifica del SDK dentro de Android Studio, en el dialogo de configuracion, bajo Languages & Frameworks → Android SDK.
+
+Verifique que la variable de usuario haya sido añadida antes de proceder.
+
+Agregar el path a las herramientas de la plataforma (Android Platform Tools)
+
+
+Abra el panel de control de Windows (Control Panel)
+Seleccione Cuentas de Usuario y nuevamente Cuentas de Usuario (User Account)
+Presione en modificar variables de entorno (Change My Enviroment Variables)}
+Seleccione la variable PATH
+Presione en Editar
+Presione en Nueva y agregue la dirección a Platform-tools a la list
+
+La ubicación por defecto de la carpeta de platform-tools es la siguiente:
+
+%LOCALAPPDATA%\Android\Sdk\platform-tools
+
+### Abrir el emulador de Android
+
+Seleccione "Create Virtual Device...", luego elija cualquier teléfono de la lista y haga clic en "Next", luego seleccione la imagen UpsideDownCake API Nivel 34.
+
+Click "Next" then "Finish" to create your AVD. At this point you should be able to click on the green triangle button next to your AVD to launch it.
+
+## Para correr la aplicación en Android :rocket: :robot:
+
+Una vez configurado el entorno, abrir la terminal en la ubicacion del proyecto y ejecutar:
+
 ```
 
-## Step 2: Start your Application
+npx react-native run-android
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### For iOS
+## Autores ✒️
 
-```bash
-# using npm
-npm run ios
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- **Antonella Daiana Gacetua** - _Desarrollador_ [Antonella Daiana Gacetua]()
+- **Luis Jose Javier Marchant Rojas** _Desarrollador_ [Luis Jose Javier Marchant Rojas ]()
+- **Matias Joel Escobar** _Desarrollador_ [Matias Joel Escobar]()
+- **Facundo Carlos Pietra** _Desarrollador_ [Facundo Carlos Pietra]()
+- **Ezequiel Alberto Gonzalez Nicolini** _Desarrollador_ [Ezequiel Alberto Gonzalez Nicolini]()
