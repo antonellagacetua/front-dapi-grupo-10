@@ -11,13 +11,13 @@ function HomeScreen({navigation}) {
   // );
 
   const {data, loading, error} = useFetch(
-    `${process.env.API_URL}/pelicula/mainlist/1`,
+    `https://movieplay-back.onrender.com/pelicula/mainlist/1`,
   );
   const {
     data: data2,
     loading: loading2,
     error: error2,
-  } = useFetch(`${process.env.API_URL}/pelicula/mainlist/2`);
+  } = useFetch(`https://movieplay-back.onrender.com/pelicula/mainlist/2`);
 
   if (error || error2) {
     return <Error message="Ocurrio un error al cargar los trailers" />;

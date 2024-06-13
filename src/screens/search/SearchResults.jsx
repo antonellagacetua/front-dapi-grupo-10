@@ -15,7 +15,7 @@ function SearchResults({navigation, route}) {
   useEffect(() => {
     setIsRefreshing(true);
     fetch(
-      `${process.env.API_URL}/pelicula/search/${search}?page=${currentPage}`,
+      `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${currentPage}`,
     )
       .then(response => response.json())
       .then(data => {

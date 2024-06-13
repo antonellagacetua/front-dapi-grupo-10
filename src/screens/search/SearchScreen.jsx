@@ -50,7 +50,7 @@ function SearchScreen({navigation}) {
     }
     setIsRefreshing(true);
     fetch(
-      `${process.env.API_URL}/pelicula/search/${search}?page=${currentPage}`,
+      `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${currentPage}`,
     )
       .then(response => response.json())
       .then(data => {
@@ -87,7 +87,7 @@ function SearchScreen({navigation}) {
 
     try {
       const response = await fetch(
-        `${process.env.API_URL}/pelicula/search/${search}?page=${
+        `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${
           currentPage + 1
         }`,
       );
