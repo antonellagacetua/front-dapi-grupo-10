@@ -50,7 +50,7 @@ function SearchScreen({navigation}) {
       return;
     }
     setIsRefreshing(true);
-    fetch(`http://movieplay-back.onrender.com/pelicula/search/${search}?page=1`)
+    fetch(`https://movieplay-back.onrender.com/pelicula/search/${search}?page=1`)
       .then(response => response.json())
       .then(data => {
         if (!data.dataCast.results && data.dataMovies.results.length === 0) {
@@ -104,7 +104,7 @@ function SearchScreen({navigation}) {
 
     try {
       const response = await fetch(
-        `http://movieplay-back.onrender.com/pelicula/search/${search}?page=${
+        `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${
           currentPage + 1
         }`,
       );
