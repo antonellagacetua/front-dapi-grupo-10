@@ -122,6 +122,7 @@ function EditAccount({navigation}) {
           </Text>
           <TextInput
             style={{
+              color:'#16425B',
               backgroundColor: '#fff',
               padding: 10,
               borderRadius: 5,
@@ -144,6 +145,7 @@ function EditAccount({navigation}) {
           </Text>
           <TextInput
             style={{
+              color:'#16425B',
               backgroundColor: '#fff',
               padding: 10,
               borderRadius: 5,
