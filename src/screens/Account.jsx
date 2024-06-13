@@ -23,8 +23,6 @@ function AccountScreen({navigation}) {
   useEffect(() => {
 
     const fetchUserData = async () => {
-      console.log('Intentando obtener datos de usuario con id: ', userId)
-
       try {
         const response =  await apiClient.get(`/user/${userId}`, {
           headers: {
@@ -38,7 +36,7 @@ function AccountScreen({navigation}) {
     }
 
     fetchUserData();
-  }, [userId, token]);
+  });
 
 
   return (
