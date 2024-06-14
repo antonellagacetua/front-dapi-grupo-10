@@ -56,7 +56,7 @@ function AccountScreen({navigation}) {
                 size={24}
                 color="#262626"
               />
-              <Text>Editar cuenta</Text>
+              <Text style={{color: 'black'}}>Editar cuenta</Text>
             </View>
             <Ionicons name="add-circle-outline" size={24} color="#262626" />
           </View>
@@ -65,9 +65,9 @@ function AccountScreen({navigation}) {
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons name="language" size={24} color="#262626" />
-              <Text>Lenguaje</Text>
+              <Text style={{color: 'black'}}>Lenguaje</Text>
             </View>
-            <Text>Espanol</Text>
+            <Text style={{color: 'black'}}>Espanol</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -98,7 +98,7 @@ function AccountScreen({navigation}) {
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons name="exit-outline" size={24} color="#262626" />
-              <Text>Cerrar sesion</Text>
+              <Text style={{color: 'black'}}>Cerrar sesion</Text>
             </View>
           </View>
         </TouchableOpacity>
