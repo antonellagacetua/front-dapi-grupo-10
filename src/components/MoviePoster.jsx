@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { noPoster } from '../assets/noposter.js';
 
 const MoviePoster = ({data, navigation}) => {
   return (
@@ -35,7 +36,9 @@ const MoviePoster = ({data, navigation}) => {
       </View>
       <Image
         source={{
-          uri: `https://image.tmdb.org/t/p/w500${data?.backdrop_path}`,
+          uri: data?.backdrop_path
+            ? `https://image.tmdb.org/t/p/w500${data?.backdrop_path}` 
+            : `data:image/png;base64,${noPoster}`,
         }}
         style={{width: '100%', height: 337, objectFit: 'cover'}}
       />

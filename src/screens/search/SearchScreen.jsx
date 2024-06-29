@@ -1,28 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View, Keyboard } from 'react-native';
 import SearchBar from '../../components/SearchBar';
 import Error from '../../components/Error';
 import MovieCard from '../../components/MovieCard';
+import debounce from 'lodash.debounce'; // Importa debounce desde lodash
 
-function SearchScreen({navigation}) {
+function SearchScreen({ navigation }) {
   const [search, setSearch] = useState('');
-
-  const handleChange = text => {
-    setSearch(text);
-  };
-
-  const handleSearchPress = () => {
-    navigation.navigate('SearchResults', {search});
-  };
-
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -32,15 +16,27 @@ function SearchScreen({navigation}) {
   const [hasMore, setHasMore] = useState(true);
 
   const filters = {
-    'Mas populares': array => array.sort((a, b) => b.popularity - a.popularity),
-    'Fecha de publicacion: Mas nuevo a mas viejo': array =>
+    'Mas populares': (array) => array.sort((a, b) => b.popularity - a.popularity),
+    'Fecha de publicacion: Mas nuevo a mas viejo': (array) =>
       array.sort((a, b) => new Date(b.release_date) - new Date(a.release_date)),
-    'Fecha de publicacion: Mas viejo a mas nuevo': array =>
+    'Fecha de publicacion: Mas viejo a mas nuevo': (array) =>
       array.sort((a, b) => new Date(a.release_date) - new Date(b.release_date)),
-    'Calificacion: De mayor a menor': array =>
-      array.sort((a, b) => b.vote_average - a.vote_average),
-    'Calificacion: De menor a mayor': array =>
-      array.sort((a, b) => a.vote_average - b.vote_average),
+    'Calificacion: De mayor a menor': (array) => array.sort((a, b) => b.vote_average - a.vote_average),
+    'Calificacion: De menor a mayor': (array) => array.sort((a, b) => a.vote_average - b.vote_average),
+  };
+
+  // Utiliza debounce en handleChange para retrasar la búsqueda
+  const debouncedSearch = debounce((text) => {
+    setSearch(text);
+  }, 500); // Tiempo de espera de 500ms (ajusta según sea necesario)
+
+  const handleChange = (text) => {
+    debouncedSearch(text); // Llama a debouncedSearch en lugar de setSearch directamente
+  };
+
+  const handleSearchPress = () => {
+    Keyboard.dismiss(); // Oculta el teclado al presionar el botón de búsqueda
+    navigation.navigate('SearchResults', { search });
   };
 
   useEffect(() => {
@@ -50,22 +46,22 @@ function SearchScreen({navigation}) {
       return;
     }
     setIsRefreshing(true);
-    fetch(`https://movieplay-back.onrender.com/pelicula/search/${search}?page=1`)
-      .then(response => response.json())
-      .then(data => {
-        if (!data.dataCast.results && data.dataMovies.results.length === 0) {
+    const url = `https://movieplay-back.onrender.com/pelicula/search/${encodeURIComponent(search)}?page=1`;
+    console.log('Fetching URL:', url);
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data recibida:', data);
+        if (!data.dataCast.results && !data.dataMovies.results) {
           setError('No se encontraron resultados');
           return;
         }
-        if (
-          data.dataCast.results.length > 0 &&
-          data.dataMovies.results.length === 0
-        ) {
+        if (data.dataCast.results && !data.dataMovies.results) {
           setSearchResults(data.dataCast.results);
           setTotalPages(data.dataCast.total_pages);
           return;
         }
-        if (!data.dataCast.results && data.dataMovies.results.length > 0) {
+        if (!data.dataCast.results && data.dataMovies.results) {
           setSearchResults(data.dataMovies.results);
           setTotalPages(data.dataMovies.total_pages);
           return;
@@ -74,7 +70,8 @@ function SearchScreen({navigation}) {
         setSearchResults(data.dataCast.results.concat(data.dataMovies.results));
         setTotalPages(data.dataMovies.total_pages);
       })
-      .catch(err => {
+      .catch((err) => {
+        console.error('Error al buscar:', err);
         setError(err);
       })
       .finally(() => {
@@ -82,7 +79,7 @@ function SearchScreen({navigation}) {
       });
   }, [search]);
 
-  const handleFilter = newFilter => {
+  const handleFilter = (newFilter) => {
     setSelectedFilter(newFilter);
     const dataWithFilters = filters[newFilter](searchResults);
     setSearchResults([...dataWithFilters]);
@@ -90,10 +87,11 @@ function SearchScreen({navigation}) {
   };
 
   const handleFilterPress = () => {
-    navigation.navigate('Filters', {handleFilter, selectedFilter});
+    Keyboard.dismiss(); // Oculta el teclado al presionar el botón de filtro
+    navigation.navigate('Filters', { handleFilter, selectedFilter });
   };
 
-  const handlePageClick = page => {
+  const handlePageClick = (page) => {
     setCurrentPage(page);
   };
 
@@ -104,15 +102,10 @@ function SearchScreen({navigation}) {
 
     try {
       const response = await fetch(
-        `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${
-          currentPage + 1
-        }`,
+        `https://movieplay-back.onrender.com/pelicula/search/${search}?page=${currentPage + 1}`
       );
       const data = await response.json();
-      setSearchResults(prevResults => [
-        ...prevResults,
-        ...data.dataMovies.results,
-      ]);
+      setSearchResults((prevResults) => [...prevResults, ...data.dataMovies.results]);
       setTotalPages(data.dataMovies.total_pages);
       setCurrentPage(currentPage + 1);
       setHasMore(data.dataMovies.page < data.dataMovies.total_pages);
@@ -132,7 +125,8 @@ function SearchScreen({navigation}) {
           padding: 10,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <ActivityIndicator size="large" color="#3A7CA5" />
       </View>
     );
@@ -159,15 +153,17 @@ function SearchScreen({navigation}) {
             borderRadius: 5,
             margin: 5,
           }}
-          onPress={() => handlePageClick(i)}>
+          onPress={() => handlePageClick(i)}
+        >
           <Text
             style={{
               color: currentPage === i ? '#C1DCF2' : '#3A7CA5',
               fontWeight: 'bold',
-            }}>
+            }}
+          >
             {i}
           </Text>
-        </Pressable>,
+        </Pressable>
       );
     }
 
@@ -176,7 +172,7 @@ function SearchScreen({navigation}) {
 
   if (error) {
     return (
-      <View style={{flex: 1, backgroundColor: '#C1DCF2'}}>
+      <View style={{ flex: 1, backgroundColor: '#C1DCF2' }}>
         <SearchBar
           handleChange={handleChange}
           handleSearchPress={handleSearchPress}
@@ -195,7 +191,8 @@ function SearchScreen({navigation}) {
         flex: 1,
         backgroundColor: '#C1DCF2',
         alignItems: 'center',
-      }}>
+      }}
+    >
       <SearchBar
         handleChange={handleChange}
         handleSearchPress={handleSearchPress}
@@ -221,7 +218,8 @@ function SearchScreen({navigation}) {
             justifyContent: 'center',
             gap: 20,
             padding: 20,
-          }}>
+          }}
+        >
           <Image
             source={require('../../../assets/notfoundmovies-removebg-preview.png')}
             style={{
@@ -235,7 +233,8 @@ function SearchScreen({navigation}) {
               fontSize: 18,
               textAlign: 'center',
               fontWeight: 'bold',
-            }}>
+            }}
+          >
             No se encontraron resultados para la busqueda
           </Text>
           <Text
@@ -243,7 +242,8 @@ function SearchScreen({navigation}) {
               color: '#9E9E9E',
               fontSize: 16,
               textAlign: 'center',
-            }}>
+            }}
+          >
             Intentalo nuevamente
           </Text>
         </View>
@@ -253,23 +253,28 @@ function SearchScreen({navigation}) {
           <FlatList
             isRefreshing={isRefreshing}
             data={searchResults}
-            style={{marginTop: 50}}
-            renderItem={({item}) => (
+            style={{ marginTop: 50 }}
+            renderItem={({ item }) => (
               <MovieCard
                 item={item}
                 navigation={navigation}
                 width={113}
                 height={148}
-                styles={{marginHorizontal: 10, borderRadius: 10}}
+                styles={{ marginHorizontal: 10, borderRadius: 10 }}
                 title={true}
               />
             )}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={(item) => item.id.toString()}
             numColumns={3}
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.5}
             ListFooterComponent={renderFlatListFooter}
           />
+          {isRefreshing && (
+            <View style={styles.spinnerContainer}>
+              <ActivityIndicator size="large" color="#3A7CA5" />
+            </View>
+          )}
         </>
       )}
     </View>
@@ -288,6 +293,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'medium',
   },
+  spinnerContainer: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
-export default SearchScreen;
+export default SearchScreen;
