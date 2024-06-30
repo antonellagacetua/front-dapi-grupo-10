@@ -1,8 +1,8 @@
 import React from 'react';
-import {Pressable, Text} from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const MovieActionBtn = ({icon, size, color, text, styles}) => {
+const MovieActionBtn = ({ icon, size, color, text, styles, onPress }) => {
   return (
     <Pressable
       style={{
@@ -10,8 +10,10 @@ const MovieActionBtn = ({icon, size, color, text, styles}) => {
         padding: 5,
         borderRadius: 5,
         ...styles,
-      }}>
-      {text && <Text style={{color: 'white', fontSize: 14}}>{text}</Text>}
+      }}
+      onPress={onPress}
+    >
+      {text && <Text style={{ color: 'white', fontSize: 14 }}>{text}</Text>}
       {icon && <Ionicons name={icon} size={size} color={color} />}
     </Pressable>
   );

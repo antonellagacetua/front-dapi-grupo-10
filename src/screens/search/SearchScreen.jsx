@@ -28,7 +28,7 @@ function SearchScreen({ navigation }) {
   // Utiliza debounce en handleChange para retrasar la búsqueda
   const debouncedSearch = debounce((text) => {
     setSearch(text);
-  }, 500); // Tiempo de espera de 500ms (ajusta según sea necesario)
+  }, 1000); // Tiempo de espera de 500ms (ajusta según sea necesario)
 
   const handleChange = (text) => {
     debouncedSearch(text); // Llama a debouncedSearch en lugar de setSearch directamente
