@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View, 
 import SearchBar from '../../components/SearchBar';
 import Error from '../../components/Error';
 import MovieCard from '../../components/MovieCard';
-import debounce from 'lodash.debounce'; // Importa debounce desde lodash
+import debounce from 'lodash.debounce';
 
 function SearchScreen({ navigation }) {
   const [search, setSearch] = useState('');
@@ -25,17 +25,16 @@ function SearchScreen({ navigation }) {
     'Calificacion: De menor a mayor': (array) => array.sort((a, b) => a.vote_average - b.vote_average),
   };
 
-  // Utiliza debounce en handleChange para retrasar la búsqueda
   const debouncedSearch = debounce((text) => {
     setSearch(text);
-  }, 1000); // Tiempo de espera de 500ms (ajusta según sea necesario)
+  }, 1000);
 
   const handleChange = (text) => {
-    debouncedSearch(text); // Llama a debouncedSearch en lugar de setSearch directamente
+    debouncedSearch(text);
   };
 
   const handleSearchPress = () => {
-    Keyboard.dismiss(); // Oculta el teclado al presionar el botón de búsqueda
+    Keyboard.dismiss();
     navigation.navigate('SearchResults', { search });
   };
 
@@ -87,7 +86,7 @@ function SearchScreen({ navigation }) {
   };
 
   const handleFilterPress = () => {
-    Keyboard.dismiss(); // Oculta el teclado al presionar el botón de filtro
+    Keyboard.dismiss();
     navigation.navigate('Filters', { handleFilter, selectedFilter });
   };
 
@@ -186,13 +185,7 @@ function SearchScreen({ navigation }) {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#C1DCF2',
-        alignItems: 'center',
-      }}
-    >
+    <Pressable onPress={() => Keyboard.dismiss()} style={styles.container}>
       <SearchBar
         handleChange={handleChange}
         handleSearchPress={handleSearchPress}
@@ -277,11 +270,16 @@ function SearchScreen({ navigation }) {
           )}
         </>
       )}
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#C1DCF2',
+    alignItems: 'center',
+  },
   image: {
     width: 246,
     height: 237,

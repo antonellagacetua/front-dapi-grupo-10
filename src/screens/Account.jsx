@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AccountAvatar from '../components/AccountAvatar';
 import { store } from '../redux/configureStore';
 import apiClient from '../api/apiClient';
 
-function AccountScreen({navigation}) {
-
+function AccountScreen({ navigation }) {
   const [user, setUser] = useState({
     id: null,
     email: null,
@@ -21,23 +20,21 @@ function AccountScreen({navigation}) {
   const token = store.getState().auth.session.jwt;
 
   useEffect(() => {
-
     const fetchUserData = async () => {
       try {
-        const response =  await apiClient.get(`/user/${userId}`, {
+        const response = await apiClient.get(`/user/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setUser(response.data);
       } catch (error) {
-        console.error('API call error when trying to get uer info: ', error);
+        console.error('API call error when trying to get user info: ', error);
       }
-    }
+    };
 
     fetchUserData();
-  });
-
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -48,7 +45,8 @@ function AccountScreen({navigation}) {
       <View style={styles.buttonsView}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditAccount', { user })}>
+          onPress={() => navigation.navigate('EditAccount', { user })}
+        >
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons
@@ -56,20 +54,20 @@ function AccountScreen({navigation}) {
                 size={24}
                 color="#262626"
               />
-              <Text style={{color: 'black'}}>Editar cuenta</Text>
+              <Text style={{ color: 'black' }}>Editar cuenta</Text>
             </View>
             <Ionicons name="add-circle-outline" size={24} color="#262626" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        {/* <TouchableOpacity style={styles.button}>
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons name="language" size={24} color="#262626" />
-              <Text style={{color: 'black'}}>Lenguaje</Text>
+              <Text style={{ color: 'black' }}>Lenguaje</Text>
             </View>
-            <Text style={{color: 'black'}}>Espanol</Text>
+            <Text style={{ color: 'black' }}>Espanol</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.buttonsView}>
@@ -89,16 +87,17 @@ function AccountScreen({navigation}) {
                   style: 'destructive',
                   onPress: () => {
                     // TODO: Delete account
-                    navigation.replace('Close', {action: 'close'});
+                    navigation.replace('Close', { action: 'close' });
                   },
                 },
               ],
             );
-          }}>
+          }}
+        >
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons name="exit-outline" size={24} color="#262626" />
-              <Text style={{color: 'black'}}>Cerrar sesion</Text>
+              <Text style={{ color: 'black' }}>Cerrar sesion</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -118,16 +117,17 @@ function AccountScreen({navigation}) {
                   style: 'destructive',
                   onPress: () => {
                     // TODO: Delete account
-                    navigation.navigate('Close', {action: 'delete'});
+                    navigation.navigate('Close', { action: 'delete' });
                   },
                 },
               ],
             );
-          }}>
+          }}
+        >
           <View style={styles.button}>
             <View style={styles.buttonsContainer}>
               <Ionicons name="trash-outline" size={24} color="#262626" />
-              <Text style={{color: 'red'}}>Eliminar cuenta</Text>
+              <Text style={{ color: 'red' }}>Eliminar cuenta</Text>
             </View>
           </View>
         </TouchableOpacity>

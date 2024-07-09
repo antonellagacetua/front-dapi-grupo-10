@@ -5,22 +5,20 @@ import {
   Text,
   TextInput,
   View,
+  Keyboard,
 } from 'react-native';
 import AccountAvatar from '../../components/AccountAvatar';
 import { useRoute } from '@react-navigation/native';
 import { store } from '../../redux/configureStore';
 import apiClient from '../../api/apiClient';
 
-function EditAccount({navigation}) {
-
-
+function EditAccount({ navigation }) {
   const token = store.getState().auth.session.jwt;
 
   const route = useRoute();
   const { id, given_name, name, nickname, email, picture } = route.params.user;
 
   const [profilePicture, setProfilePicture] = useState(picture);
-
 
   const [userParams, setUserParams] = useState({
     nameParam: name,
@@ -33,8 +31,7 @@ function EditAccount({navigation}) {
     name: '',
   });
 
-  const handleSaveChanges = async ()  => {
-
+  const handleSaveChanges = async () => {
     const { nameParam, nicknameParam, pictureParam } = userParams;
 
     const newErrors = {};
@@ -51,7 +48,6 @@ function EditAccount({navigation}) {
       setErrors(newErrors);
       return;
     }
-
 
     const data = new FormData();
 
@@ -73,12 +69,12 @@ function EditAccount({navigation}) {
 
     const updateUser = async () => {
       try {
-        console.log('Intentando editar usuario ');
-        const response =  await apiClient.patch(`/user/${id}`, data, {
+        console.log('Intentando editar usuario');
+        const response = await apiClient.patch(`/user/${id}`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
-          }
+          },
         });
         console.log('Status :', response.status);
         console.log('Data :', response.data);
@@ -87,29 +83,27 @@ function EditAccount({navigation}) {
         console.log(error);
         console.error('API call error when trying to update user info: ', error.message);
       }
-    }
+    };
 
     await updateUser();
-  }
+  };
 
   const handleImageChange = (base64Image, uri) => {
     setProfilePicture(base64Image);
-    setUserParams({...userParams, pictureParam: uri});
+    setUserParams({ ...userParams, pictureParam: uri });
   };
 
-
   return (
-    <View style={styles.container}>
-      
-      <AccountAvatar 
-        picture={profilePicture} 
+    <Pressable onPress={() => Keyboard.dismiss()} style={styles.container}>
+      <AccountAvatar
+        picture={profilePicture}
         enableEdit="true"
         onImageChange={handleImageChange}
       />
 
       <Text style={styles.username}>{given_name}</Text>
 
-      <View style={{width: '100%'}}>
+      <View style={{ width: '100%' }}>
         <View>
           <Text
             style={{
@@ -117,83 +111,60 @@ function EditAccount({navigation}) {
               color: '#262626',
               marginBottom: 5,
               width: '100%',
-            }}>
+            }}
+          >
             Nickname
           </Text>
           <TextInput
-            style={{
-              color:'#16425B',
-              backgroundColor: '#fff',
-              padding: 10,
-              borderRadius: 5,
-              width: '100%',
-            }}
+            style={styles.input}
             value={userParams.nicknameParam}
-            onChangeText={(text) => {setUserParams({...userParams, nicknameParam: text})}}
+            onChangeText={(text) =>
+              setUserParams({ ...userParams, nicknameParam: text })
+            }
             maxLength={30}
           />
           <Text style={styles.error}>{errors.nickname}</Text>
-          <View style={{marginVertical: 10}}></View>
+          <View style={{ marginVertical: 10 }}></View>
           <Text
             style={{
               fontSize: 14,
               color: '#262626',
               marginBottom: 5,
               width: '100%',
-            }}>
+            }}
+          >
             Nombre completo
           </Text>
           <TextInput
-            style={{
-              color:'#16425B',
-              backgroundColor: '#fff',
-              padding: 10,
-              borderRadius: 5,
-              width: '100%',
-            }}
+            style={styles.input}
             value={userParams.nameParam}
-            onChangeText={(text) => {setUserParams({...userParams, nameParam: text})}}
+            onChangeText={(text) =>
+              setUserParams({ ...userParams, nameParam: text })
+            }
             maxLength={30}
           />
           <Text style={styles.error}>{errors.name}</Text>
-          <View style={{marginVertical: 10}}></View>
+          <View style={{ marginVertical: 10 }}></View>
           <Text
             style={{
               fontSize: 14,
               color: '#262626',
               marginBottom: 5,
               width: '100%',
-            }}>
+            }}
+          >
             Email
           </Text>
           <TextInput
-            style={{
-              backgroundColor: '#D1D3D9',
-              padding: 10,
-              borderRadius: 5,
-              width: '100%',
-              borderColor: '#8F8E94',
-              borderWidth: 1,
-            }}
+            style={styles.disabledInput}
             value={email}
           />
         </View>
         <Pressable onPress={handleSaveChanges}>
-          <Text
-            style={{
-              color: '#fff',
-              marginTop: 20,
-              fontSize: 20,
-              backgroundColor: '#0B3750',
-              paddingHorizontal: 50,
-              paddingVertical: 16,
-              textAlign: 'center',
-            }}>
-            Guardar cambios
-          </Text>
+          <Text style={styles.saveButton}>Guardar cambios</Text>
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -211,27 +182,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 40,
   },
-  buttonsView: {
-    width: '100%',
+  input: {
+    color: '#16425B',
     backgroundColor: '#fff',
-    padding: 20,
-    color: '#262626',
-    marginBottom: 10,
-    borderRadius: 10,
-    gap: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    padding: 10,
+    borderRadius: 5,
     width: '100%',
-    gap: 10,
+  },
+  disabledInput: {
+    backgroundColor: '#D1D3D9',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+    borderColor: '#8F8E94',
+    borderWidth: 1,
   },
   error: {
     fontSize: 12,
@@ -239,6 +203,16 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: '100%',
   },
+  saveButton: {
+    color: '#fff',
+    marginTop: 20,
+    fontSize: 20,
+    backgroundColor: '#0B3750',
+    paddingHorizontal: 50,
+    paddingVertical: 16,
+    textAlign: 'center',
+  },
 });
 
 export default EditAccount;
+
