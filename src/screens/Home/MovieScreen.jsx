@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useFetch } from '../../hooks/useFetch';
+import React, {useState, useEffect} from 'react';
+import {
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {useFetch} from '../../hooks/useFetch';
 import Error from '../../components/Error';
 import MovieActionBtn from '../../components/MovieActionBtn';
 import MovieDescription from '../../components/MovieDescription';
@@ -10,12 +17,17 @@ import MoviePoster from '../../components/MoviePoster';
 import MovieInfo from '../../components/MovieInfo';
 import MovieTrailer from '../../components/MovieTrailer';
 import Orientation from 'react-native-orientation-locker';
+import MovieRating from '../../components/MovieRating';
+import Share from 'react-native-share';
 
-const MovieScreen = ({ navigation, route }) => {
-  const { id } = route.params;
-  const { data, loading, error } = useFetch(`https://movieplay-back.onrender.com/pelicula/${id}`);
+const MovieScreen = ({navigation, route}) => {
+  const {id} = route.params;
+  const {data, loading, error} = useFetch(
+    `https://movieplay-back.onrender.com/pelicula/${id}`,
+  );
   const [showTrailer, setShowTrailer] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isRating, setIsRating] = useState(false);
 
   useEffect(() => {
     if (isFullScreen) {
@@ -29,6 +41,36 @@ const MovieScreen = ({ navigation, route }) => {
     setShowTrailer(!showTrailer);
   };
 
+  const handleRate = async rate => {
+    try {
+      const response = await fetch(
+        `https://movieplay-back.onrender.com/pelicula/${id}/rate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            value: rate,
+          }),
+        },
+      );
+      const json = await response.json();
+      if (json.success) {
+        Alert.alert('Gracias por puntuar la pelicula');
+        setIsRating(false);
+      } else {
+        Alert.alert('Ocurrió un error al puntuar la pelicula');
+      }
+    } catch (error) {
+      Alert.alert('Ocurrió un error al puntuar la pelicula');
+    }
+  };
+
+  const handleIsRating = () => {
+    setIsRating(!isRating);
+  };
+
   if (error) {
     return <Error message="Ocurrió un error al cargar el trailer" />;
   }
@@ -38,13 +80,12 @@ const MovieScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <ScrollView
         style={{
           flex: 1,
           backgroundColor: '#C1DCF2',
-        }}
-      >
+        }}>
         <MoviePoster data={data} navigation={navigation} />
         <View>
           <Text
@@ -54,8 +95,7 @@ const MovieScreen = ({ navigation, route }) => {
               fontWeight: 'bold',
               textAlign: 'center',
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             {data?.title}
           </Text>
           <MovieInfo data={data} />
@@ -66,30 +106,51 @@ const MovieScreen = ({ navigation, route }) => {
               alignItems: 'center',
               marginVertical: 10,
               gap: 10,
-            }}
-          >
-            {data?.trailerKey && (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#0B3750',
-                  padding: 5,
-                  borderRadius: 5,
-                  ...styles,
-                  paddingHorizontal: 40,
-                }}
-                onPress={handleTrailerPress}
-              >
-                <Text style={{ color: 'white' }}>Trailer</Text>
-              </TouchableOpacity>
-            )}
+            }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#0B3750',
+                padding: 5,
+                borderRadius: 5,
+                ...styles,
+                paddingHorizontal: 40,
+              }}
+              onPress={() => {
+                data?.trailerKey
+                  ? handleTrailerPress()
+                  : Alert.alert('Esta pelicula no tiene trailer');
+              }}>
+              <Text style={{color: 'white'}}>Trailer</Text>
+            </TouchableOpacity>
             <MovieActionBtn icon="heart-outline" size={20} color="white" />
-            <MovieActionBtn icon="star-outline" size={20} color="white" />
-            <MovieActionBtn icon="share-social" size={20} color="white" />
+            <MovieActionBtn
+              icon="star-outline"
+              size={20}
+              color="white"
+              onPress={() => handleIsRating()}
+            />
+            <MovieActionBtn
+              icon="share-social"
+              size={20}
+              color="white"
+              onPress={() => {
+                Share.open({
+                  title: 'Compartir',
+                  message: `Mira la pelicula ${data.title} en MoviePlay`,
+                })
+                  .then(res => {
+                    console.log(res);
+                  })
+                  .catch(err => {
+                    err && console.log(err);
+                  });
+              }}
+            />
           </View>
         </View>
         <MovieDescription data={data} />
         {data?.directing && (
-          <View style={{ paddingHorizontal: 20, marginVertical: 20, gap: 10 }}>
+          <View style={{paddingHorizontal: 20, marginVertical: 20, gap: 10}}>
             <MovieDirectors data={data} />
             {data?.acting && <MovieActors data={data} />}
           </View>
@@ -97,10 +158,20 @@ const MovieScreen = ({ navigation, route }) => {
       </ScrollView>
       {showTrailer && (
         <View style={styles.overlay}>
-          <MovieTrailer videoId={data.trailerKey} onFullScreenChange={setIsFullScreen} />
-          <TouchableOpacity style={styles.closeButton} onPress={handleTrailerPress}>
+          <MovieTrailer
+            videoId={data.trailerKey}
+            onFullScreenChange={setIsFullScreen}
+          />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleTrailerPress}>
             <Text style={styles.closeButtonText}>Cerrar</Text>
           </TouchableOpacity>
+        </View>
+      )}
+      {isRating && (
+        <View style={styles.overlay}>
+          <MovieRating handleClose={handleIsRating} handleRate={handleRate} />
         </View>
       )}
     </View>
