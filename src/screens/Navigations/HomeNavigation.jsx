@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../Home/HomeScreen';
 import Genres from '../Home/Genres';
 import MovieScreen from '../Home/MovieScreen';
+import GenresResults from '../Home/GenresResults';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,7 +11,6 @@ function HomeNavigation() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: 'Seleccionar genero',
         headerTitleAlign: 'center',
         headerShadowVisible: false,
         headerStyle: {
@@ -37,7 +37,14 @@ function HomeNavigation() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="GenresScreen" component={Genres} />
+      <Stack.Screen
+        name="GenresScreen"
+        component={Genres}
+        options={{
+          headerTitle: 'Filtrar por genero',
+        }}
+      />
+      <Stack.Screen name="GenresResults" component={GenresResults} />
     </Stack.Navigator>
   );
 }

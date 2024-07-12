@@ -2,9 +2,8 @@ import React, {useState, useRef} from 'react';
 import {Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const MovieRating = ({handleRate, handleClose}) => {
+const MovieRating = ({handleRate, handleClose, voteCount}) => {
   const [rating, setRating] = useState(0);
-  const votes = useRef(Math.ceil(Math.random() * 999)).current;
 
   const handleStarPress = rate => {
     setRating(rate);
@@ -40,7 +39,7 @@ const MovieRating = ({handleRate, handleClose}) => {
           textAlign: 'center',
           marginTop: 20,
         }}>
-        {votes} personas la puntuaron!
+        {voteCount} personas la puntuaron!
       </Text>
       <View
         style={{

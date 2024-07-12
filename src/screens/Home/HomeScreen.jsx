@@ -39,7 +39,7 @@ function HomeScreen({navigation}) {
       <View style={styles.genreContainer}>
         <Title text={'Ultimos trailers'} styles={styles} />
         <Pressable onPress={() => navigation.navigate('GenresScreen')}>
-          <Text style={styles.genreButton}>Genero: todos</Text>
+          <Text style={styles.genreButton}>Filtrar por genero</Text>
         </Pressable>
       </View>
       <FlatList
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genreButton: {
-    fontWeight:'bold',
+    fontWeight: 'bold',
     backgroundColor: '#FF407D',
     paddingHorizontal: 5,
     textTransform: 'uppercase',

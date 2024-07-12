@@ -171,7 +171,11 @@ const MovieScreen = ({navigation, route}) => {
       )}
       {isRating && (
         <View style={styles.overlay}>
-          <MovieRating handleClose={handleIsRating} handleRate={handleRate} />
+          <MovieRating 
+          handleClose={handleIsRating} 
+          handleRate={handleRate} 
+          voteCount={data.vote_count}
+          />
         </View>
       )}
     </View>

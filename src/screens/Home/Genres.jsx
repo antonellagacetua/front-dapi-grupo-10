@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {useFetch} from '../../hooks/useFetch';
 
-const Genres = () => {
+const Genres = ({navigation}) => {  
   const {data} = useFetch(
     `https://api.themoviedb.org/3/genre/movie/list?api_key=f14ce6e8c9f072c946514db4263511ca&language=es-ES`,
   );
@@ -28,32 +28,23 @@ const Genres = () => {
           flexWrap: 'wrap',
           width: '100%',
         }}>
-        <Pressable
-          style={{
-            paddingVertical: 10,
-            backgroundColor: '#ABB0BC',
-            color: 'white',
-            borderRadius: 10,
-            margin: 4,
-            width: '25%',
-            alignItems: 'center',
-          }}
-          onPress={() => {}}>
-          <Text style={{color: 'white'}}>Todos</Text>
-        </Pressable>
         {data?.genres.map(genre => (
           <Pressable
             key={genre.id}
             style={{
               paddingVertical: 10,
-              backgroundColor: '#ABB0BC',
+              backgroundColor: '#0B3750',
               color: 'white',
               borderRadius: 10,
               margin: 4,
               width: '25%',
               alignItems: 'center',
             }}
-            onPress={() => {}}>
+            onPress={() => {
+              navigation.navigate('GenresResults', {
+                genre,
+              });
+            }}>           
             <Text style={{color: 'white'}}>{genre.name}</Text>
           </Pressable>
         ))}
