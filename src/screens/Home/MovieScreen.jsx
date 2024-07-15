@@ -107,11 +107,14 @@ const MovieScreen = ({ navigation, route }) => {
       let response;
       if (isFavorite) {
         // Remove from favorites
-        response = await fetch(`https://movieplay-back.onrender.com/user/${userId}/favorite/${id}`, {
+        response = await fetch(`https://movieplay-back.onrender.com/user/${userId}/favorite`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            movieId: id,
+          }),
         });
       } else {
         // Add to favorites
@@ -125,7 +128,6 @@ const MovieScreen = ({ navigation, route }) => {
           }),
         });
       }
-
       if (response.ok) {
         if (isFavorite) {
           Alert.alert('Película eliminada de favoritos');
