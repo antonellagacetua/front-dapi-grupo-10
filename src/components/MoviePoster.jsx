@@ -1,11 +1,13 @@
-import React from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import React, { useState } from 'react';
+import { Image, Pressable, Text, View, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { noPoster } from '../assets/noposter.js';
 
-const MoviePoster = ({data, navigation}) => {
+const MoviePoster = ({ data, navigation }) => {
+  const [isPosterFullScreen, setIsPosterFullScreen] = useState(false);
+
   return (
-    <View style={{position: 'relative'}}>
+    <View style={{ position: 'relative' }}>
       <Pressable
         style={{
           position: 'absolute',
@@ -13,7 +15,8 @@ const MoviePoster = ({data, navigation}) => {
           left: 20,
           zIndex: 10,
         }}
-        onPress={() => navigation.goBack()}>
+        onPress={() => navigation.goBack()}
+      >
         <Ionicons name="chevron-back-circle" size={30} color="#0B3750" />
       </Pressable>
       <View
@@ -28,35 +31,84 @@ const MoviePoster = ({data, navigation}) => {
           paddingHorizontal: 10,
           borderRadius: 30,
           backdropFilter: 'blur(10px)',
-        }}>
+        }}
+      >
         <Ionicons name="star" size={20} color="#FFD700" />
-        <Text style={{color: '#0B3750', fontSize: 16, fontWeight: 'bold'}}>
+        <Text style={{ color: '#0B3750', fontSize: 16, fontWeight: 'bold' }}>
           {(data?.vote_average / 2).toFixed(0)}
         </Text>
       </View>
       <Image
         source={{
           uri: data?.backdrop_path
-            ? `https://image.tmdb.org/t/p/w500${data?.backdrop_path}` 
+            ? `https://image.tmdb.org/t/p/w500${data?.backdrop_path}`
             : `data:image/png;base64,${noPoster}`,
         }}
-        style={{width: '100%', height: 337, objectFit: 'cover'}}
+        style={{ width: '100%', height: 337, objectFit: 'cover' }}
       />
-      <Image
-        source={{
-          uri: `https://image.tmdb.org/t/p/w500${data?.poster_path}`,
-        }}
+      <TouchableOpacity
         style={{
-          width: 120,
-          height: 180,
           position: 'absolute',
           top: 150,
           right: 10,
           zIndex: 10,
         }}
-      />
+        onPress={() => setIsPosterFullScreen(true)}
+      >
+        <Image
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${data?.poster_path}`,
+          }}
+          style={{
+            width: 120,
+            height: 180,
+          }}
+        />
+      </TouchableOpacity>
+      <Modal visible={isPosterFullScreen} transparent={true}>
+        <View style={styles.fullScreenModal}>
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${data?.poster_path}`,
+            }}
+            style={styles.fullScreenImage}
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setIsPosterFullScreen(false)}
+          >
+            <Text style={styles.closeButtonText}>Cerrar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  fullScreenModal: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: '100%',
+    height: '100%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+});
 
 export default MoviePoster;
