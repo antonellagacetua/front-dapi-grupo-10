@@ -29,7 +29,7 @@ function SearchScreen({ navigation }) {
     setSearch(text);
   }, 1000);
 
-  const handleChange = (text) => {
+  const handleChange = text => {
     debouncedSearch(text);
   };
 

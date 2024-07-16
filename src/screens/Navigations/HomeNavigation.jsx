@@ -41,7 +41,7 @@ function HomeNavigation() {
         name="GenresScreen"
         component={Genres}
         options={{
-          headerTitle: 'Filtrar por genero',
+          headerTitle: 'Géneros',
         }}
       />
       <Stack.Screen name="GenresResults" component={GenresResults} />
