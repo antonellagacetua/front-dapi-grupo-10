@@ -1,23 +1,22 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SearchScreen from '../search/SearchScreen';
-import SearchResults from '../search/SearchResults';
-import Filters from '../search/Filters';
 import MovieScreen from '../Home/MovieScreen';
+import FavoritesScreen from '../FavoritesScreen';
 
 const Stack = createNativeStackNavigator();
 
-function SearchNavigation() {
+function FavoritesNavigation() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: 'Busqueda',
-        headerTitleAlign: 'center',
+        headerShown: true,
+        headerTitle: 'Favoritos',
         headerShadowVisible: false,
         headerStyle: {
           backgroundColor: '#C1DCF2',
-          height: 101,
+          height: 101, // Increase height
         },
+        headerTitleAlign: 'center',
         headerTintColor: '#0B3750',
         headerTitleStyle: {
           fontSize: 30,
@@ -26,7 +25,7 @@ function SearchNavigation() {
           width: '100%',
         },
       }}>
-      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
       <Stack.Screen
         name="MovieScreen"
         component={MovieScreen}
@@ -34,13 +33,8 @@ function SearchNavigation() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="Filters"
-        component={Filters}
-        options={{headerTitle: 'Ordernar por'}}
-      />
     </Stack.Navigator>
   );
 }
 
-export default SearchNavigation;
+export default FavoritesNavigation;

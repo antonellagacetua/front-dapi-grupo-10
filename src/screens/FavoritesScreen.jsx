@@ -1,10 +1,17 @@
 //FavoritesScreen.jsx
-import { store } from '../redux/configureStore';
-import React, { useEffect, useState, useCallback } from 'react';
-import { Image, ScrollView, Text, View, TouchableOpacity, Alert } from 'react-native';
+import {store} from '../redux/configureStore';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  Image,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import FavoriteMovieCard from '../components/FavoriteMovieCard';
-import { useFetch } from '../hooks/useFetch';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import {useFetch} from '../hooks/useFetch';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 function FavoritesScreen() {
   const [favorites, setFavorites] = useState([]);
@@ -14,13 +21,15 @@ function FavoritesScreen() {
 
   const fetchFavorites = useCallback(async () => {
     try {
-      const response = await fetch(`https://movieplay-back.onrender.com/user/${userId}/favorite`);
+      const response = await fetch(
+        `https://movieplay-back.onrender.com/user/${userId}/favorite`,
+      );
       if (!response.ok) {
         throw new Error('Error fetching favorites');
       }
       const result = await response.json();
-      console.log('Fetched favorites:', result.favoritesIds);
-      setFavorites(result.favoritesIds);
+      console.log('Fetched favorites:', result?.favoritesIds);
+      setFavorites(result?.favoritesIds || []);
     } catch (error) {
       console.error('Error fetching favorites:', error);
       Alert.alert('Ocurrió un error al obtener los favoritos');
@@ -36,19 +45,23 @@ function FavoritesScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchFavorites();
-    }, [fetchFavorites, navigation])
+    }, [fetchFavorites]),
   );
 
-  const handleRemoveFavorite = useCallback(async (movieId) => {
-    fetchFavorites();
-  }, [fetchFavorites, navigation]);
+  const handleRemoveFavorite = useCallback(
+    async movieId => {
+      fetchFavorites();
+    },
+    [fetchFavorites],
+  );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#C1DCF2' }}>
-      <View style={{ alignItems: 'center', marginTop: 40 }}>
+    <ScrollView style={{flex: 1, backgroundColor: '#C1DCF2'}}>
+      <View style={{alignItems: 'center', marginTop: 40}}>
         {favorites.length > 0 ? (
-          favorites.map((movieId) => (
+          favorites.map(movieId => (
             <FavoriteMovieCard
+              navigation={navigation}
               key={movieId}
               movieId={movieId}
               onFavoriteRemoved={() => handleRemoveFavorite(movieId)}
@@ -57,7 +70,7 @@ function FavoritesScreen() {
         ) : (
           <>
             <Image
-              style={{ width: 250, height: 250, marginBottom: 20 }}
+              style={{width: 250, height: 250, marginBottom: 20}}
               source={require('../../assets/No-Favorite-illustration.png')}
             />
             <Text
