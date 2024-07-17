@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Image, StyleSheet, TouchableOpacity, View, Modal, Button} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View, Modal, Pressable, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import PermissionsAndroid from 'react-native/Libraries/PermissionsAndroid/PermissionsAndroid';
@@ -95,10 +95,18 @@ const AccountAvatar = (props) => {
         <View style={styles.modalView}>
           <View style={styles.buttonsView}>
             <View style={styles.buttonsContainer}>
-              <Button title="Tomar foto" onPress={handleLaunchCamera} style={styles.button} />
-              <Button title="Elegir de la galeria" onPress={handleLaunchImageLibrary} style={styles.button} />
+              <Pressable onPress={handleLaunchCamera}>
+                <Text style={styles.button}>Cámara</Text>
+              </Pressable>
+              <Pressable onPress={handleLaunchImageLibrary}>
+                <Text style={styles.button}>Galería</Text>
+              </Pressable>      
             </View>
-            <Button title="Cancelar" onPress={() => setModalVisible(false)} style={styles.button} />
+            <View>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <Text style={styles.button}>Cancelar</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -129,26 +137,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   buttonsView: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: '80%',
+    backgroundColor: '#C1DCF2',
     padding: 20,
     color: '#262626',
     marginBottom: 10,
     borderRadius: 10,
-    gap: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
+    justifyContent: 'space-between',
   },
   button: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    gap: 10,
+    color: '#fff',
+    marginTop: 5,
+    marginBottom: 5,
+    fontSize: 20,
+    backgroundColor: '#0B3750',
+    paddingHorizontal: 30,
+    paddingVertical: 16,
+    textAlign: 'center',
+    marginHorizontal: 5,
   },
 });
 
