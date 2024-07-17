@@ -76,8 +76,6 @@ function EditAccount({ navigation }) {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('Status :', response.status);
-        console.log('Data :', response.data);
         navigation.navigate('Account');
       } catch (error) {
         console.log(error);

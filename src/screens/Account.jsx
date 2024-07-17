@@ -34,7 +34,7 @@ function AccountScreen({ navigation }) {
     };
 
     fetchUserData();
-  }, []);
+  });
 
   return (
     <View style={styles.container}>
