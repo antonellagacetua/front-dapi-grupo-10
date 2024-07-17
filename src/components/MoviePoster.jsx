@@ -15,7 +15,7 @@ const MoviePoster = ({ data, navigation }) => {
           left: 20,
           zIndex: 10,
         }}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.pop()}
       >
         <Ionicons name="chevron-back-circle" size={30} color="#0B3750" />
       </Pressable>

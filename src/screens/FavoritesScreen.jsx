@@ -10,13 +10,11 @@ import {
   Alert,
 } from 'react-native';
 import FavoriteMovieCard from '../components/FavoriteMovieCard';
-import {useFetch} from '../hooks/useFetch';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
-function FavoritesScreen() {
+function FavoritesScreen({ navigation }) {
   const [favorites, setFavorites] = useState([]);
   const [refreshFlag, setRefreshFlag] = useState(false); // State to trigger refresh
-  const navigation = useNavigation();
   const userId = store.getState().auth.user.id;
 
   const fetchFavorites = useCallback(async () => {
