@@ -1,6 +1,5 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import FavoritesScreen from '../FavoritesScreen';
 import {Image} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesignicons from 'react-native-vector-icons/AntDesign';
@@ -8,6 +7,7 @@ import MaterialCommunityicons from 'react-native-vector-icons/MaterialCommunityI
 import AccountNavigation from './AccountNavigation';
 import SearchNavigation from './SearchNavigation';
 import HomeNavigation from './HomeNavigation';
+import FavoritesNavigation from './FavoritesNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -81,9 +81,9 @@ function TabNavigation() {
       />
       <Tab.Screen
         name="Favorites"
-        component={FavoritesScreen}
+        component={FavoritesNavigation}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitle: 'Favoritos',
           headerStyle: {
             backgroundColor: '#C1DCF2',
