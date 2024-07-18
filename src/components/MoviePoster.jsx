@@ -33,10 +33,12 @@ const MoviePoster = ({ data, navigation }) => {
           backdropFilter: 'blur(10px)',
         }}
       >
-        <Ionicons name="star" size={20} color="#FFD700" />
-        <Text style={{ color: '#0B3750', fontSize: 16, fontWeight: 'bold' }}>
-          {(data?.vote_average / 2).toFixed(0)}
-        </Text>
+        <View style={{ backgroundColor: '#0B3750', justifyContent: 'center', flexDirection: 'row', padding:3 }}>
+          <Ionicons name="star" size={20} color="#FFD700" />
+          <Text style={{ color: '#FFD700', fontSize: 16, fontWeight: 'bold', marginLeft: 5 }}>
+            {(data?.vote_average / 2).toFixed(0)+' '}
+          </Text>
+        </View>
       </View>
       <Image
         source={{
